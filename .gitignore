@@ -26,6 +26,11 @@ var/*
 /vendor/
 ###< symfony/framework-bundle ###
 
+# Vite (frontend) + Node API (backend) migration apps
+/frontend/node_modules/
+/frontend/dist/
+/backend/node_modules/
+
 ###> phpunit/phpunit ###
 .symfony/*
 /phpunit.xml
