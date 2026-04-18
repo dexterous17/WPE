@@ -24,9 +24,11 @@ export default function ParliamentPage() {
 
   return (
     <article className="parliament-page">
-      <h1>Parliament</h1>
+      <h1>Virtual Parliament</h1>
       <p className="lead">
-        Top delegates by score (same data as <code>/api/v1/parliament/members</code>).
+        The &quot;Virtual Parliament&quot; consists of the TOP 600 global citizens with the highest
+        delegation score. Below is a tabular view from the Node API (the classic Twig page also
+        renders a circular layout).
       </p>
 
       {err ? <p className="error">{err}</p> : null}

@@ -249,6 +249,6 @@
   },
   "react": {
     "path": "frontend/",
-    "note": "Vite proxy /api → Node; prefer /api/v1 for new calls"
+    "note": "Vite proxy /api → Node; prefer /api/v1 for new calls. Implemented in React: FAQ, rules, legal, disclaimer, privacy (stub matches Twig), assembly directory (POST /api/v1/assembly/search), parliament scores (GET /api/v1/parliament/members), home, category hub + /category/:type/:id/:slug placeholder, /category/.../ajax mirror. Login/register/profile/user/admin/initiative/otp/resetting remain Symfony mirrors until APIs + auth."
   }
 }

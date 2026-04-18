@@ -5,34 +5,34 @@ import PagePlaceholder from './components/PagePlaceholder'
 import HomePage from './pages/HomePage'
 import ParliamentPage from './pages/ParliamentPage'
 import CategoryHubPage from './pages/CategoryHubPage'
+import CategoryInitiativePage from './pages/CategoryInitiativePage'
+import AssemblyPage from './pages/AssemblyPage'
+import FaqPage from './pages/FaqPage'
+import LegalPage from './pages/LegalPage'
+import PrivacyPage from './pages/PrivacyPage'
+import RulesPage from './pages/RulesPage'
+import DisclaimerPage from './pages/DisclaimerPage'
+import {
+  ChangePasswordHintPage,
+  LoginHintPage,
+  TestPage,
+} from './pages/AuthHintPage'
 import './App.css'
-
-const STATIC = [
-  { path: 'faq', title: 'FAQ', legacy: '/faq' },
-  { path: 'assembly', title: 'General Assembly', legacy: '/assembly' },
-  { path: 'legal', title: 'Legal notice', legacy: '/legal' },
-  { path: 'privacy', title: 'Privacy', legacy: '/privacy' },
-  { path: 'rules', title: 'Rules', legacy: '/rules' },
-  { path: 'disclaimer', title: 'Disclaimer', legacy: '/disclaimer' },
-  { path: 'login', title: 'Login', legacy: '/login' },
-  { path: 'changePassword', title: 'Change password', legacy: '/changePassword' },
-  { path: 'test', title: 'Test', legacy: '/test' },
-]
 
 export default function App() {
   return (
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
-        {STATIC.map(({ path, title, legacy }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <PagePlaceholder title={title} legacyPath={legacy} />
-            }
-          />
-        ))}
+        <Route path="faq" element={<FaqPage />} />
+        <Route path="legal" element={<LegalPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
+        <Route path="rules" element={<RulesPage />} />
+        <Route path="disclaimer" element={<DisclaimerPage />} />
+        <Route path="assembly" element={<AssemblyPage />} />
+        <Route path="login" element={<LoginHintPage />} />
+        <Route path="changePassword" element={<ChangePasswordHintPage />} />
+        <Route path="test" element={<TestPage />} />
         <Route path="parliament" element={<ParliamentPage />} />
         <Route
           path="category/delegatec"
@@ -42,6 +42,11 @@ export default function App() {
               legacyPath="/category/delegatec"
             />
           }
+        />
+        <Route path="category/:type/:id/:slug/ajax" element={<MirrorLegacyPage />} />
+        <Route
+          path="category/:type/:id/:slug"
+          element={<CategoryInitiativePage />}
         />
         <Route path="category/:type" element={<CategoryHubPage />} />
         <Route path="register/*" element={<MirrorLegacyPage />} />
