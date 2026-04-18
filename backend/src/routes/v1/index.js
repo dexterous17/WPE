@@ -5,6 +5,7 @@ import express, { Router } from "express";
 import { getPool } from "../../db/pool.js";
 import { loadPersonas } from "../../services/aiPersonas.js";
 import { runAssemblySearch } from "../../services/assemblySearch.js";
+import { runCategoryInitiativesSearch } from "../../services/categoryInitiativesSearch.js";
 import { computeParliamentMembers } from "../../services/parliamentMembers.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -63,10 +64,7 @@ async function parliamentMembersHandler(req, res) {
   }
 
   const maxRaw = req.query.max ?? req.body?.max;
-  const max = Math.min(
-    2000,
-    Math.max(1, Number.parseInt(String(maxRaw ?? 600), 10) || 600),
-  );
+  const max = Math.min(2000, Math.max(1, toIntSafe(maxRaw, 600)));
 
   const now = Date.now();
   if (
@@ -126,6 +124,56 @@ v1Router.post("/assembly/search", async (req, res) => {
     });
   }
 });
+
+/**
+ * DataTables JSON — same contract as CategoryController::listCategorySearchAction
+ * (draw, recordsTotal, recordsFiltered, items with JMS "simple" initiative shape).
+ */
+v1Router.post(
+  "/category/:type/:id/:slug/search",
+  async (req, res) => {
+    const pool = getPool();
+    if (!pool) {
+      res.status(503).json({
+        draw: toIntSafe(req.body?.draw, 1),
+        recordsTotal: 0,
+        recordsFiltered: 0,
+        items: [],
+        error: "DATABASE_URL is not configured on the API service",
+      });
+      return;
+    }
+    const categoryId = Number.parseInt(String(req.params.id), 10);
+    try {
+      const result = await runCategoryInitiativesSearch(pool, {
+        typeName: String(req.params.type),
+        categoryId,
+        slug: decodeURIComponent(String(req.params.slug)),
+        body: req.body,
+      });
+      if (result.error) {
+        res.status(result.status ?? 400).json({
+          draw: toIntSafe(req.body?.draw, 1),
+          recordsTotal: 0,
+          recordsFiltered: 0,
+          items: [],
+          error: result.error,
+        });
+        return;
+      }
+      res.json(result.json);
+    } catch (err) {
+      console.error("category initiatives search error", err);
+      res.status(500).json({
+        draw: toIntSafe(req.body?.draw, 1),
+        recordsTotal: 0,
+        recordsFiltered: 0,
+        items: [],
+        error: err instanceof Error ? err.message : "Server error",
+      });
+    }
+  },
+);
 
 function toIntSafe(v, d) {
   const n = Number.parseInt(String(v ?? ""), 10);

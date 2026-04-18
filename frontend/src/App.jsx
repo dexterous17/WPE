@@ -43,7 +43,6 @@ export default function App() {
             />
           }
         />
-        <Route path="category/:type/:id/:slug/ajax" element={<MirrorLegacyPage />} />
         <Route
           path="category/:type/:id/:slug"
           element={<CategoryInitiativePage />}

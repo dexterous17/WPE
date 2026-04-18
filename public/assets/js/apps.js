@@ -189,11 +189,7 @@ var App = (function () {
                 "searching": true,
                 "ordering": true,
                 "ajax": {
-                    "url": wpeSymfonyProxyUrl(Routing.generate('category_type_search', {
-                        "id": $table_wrapper.data("category-id"),
-                        "slug": $table_wrapper.data("category-slug"),
-                        "type": $table_wrapper.data("type")
-                    })),
+                    "url": wpeApiV1Url('/category/' + $table_wrapper.data("type") + '/' + $table_wrapper.data("category-id") + '/' + encodeURIComponent($table_wrapper.data("category-slug")) + '/search'),
                     "dataSrc": "items",
                     "type": "POST"
                 },

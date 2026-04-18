@@ -59,14 +59,14 @@
     },
     {
       "name": "category_type_search",
-      "symfony_path": "/{type}/{id}/{slug}/ajax",
+      "symfony_path": "/category/{type}/{id}/{slug}/ajax",
       "methods": ["GET", "POST"],
       "controller": "App\\Controller\\CategoryController::listCategorySearchAction",
       "consumers": ["public/assets/js/apps.js"],
       "phase": 2,
-      "status": "todo",
-      "node_path": null,
-      "notes": "Uses InitiativeRepository::searchCategoryType + countAllTypeInitiatives; port SQL/DQL next"
+      "status": "done",
+      "node_path": "/api/v1/category/{type}/{id}/{slug}/search",
+      "notes": "Twig DataTables uses wpeApiV1Url POST; React CategoryInitiativePage uses same contract"
     },
     {
       "name": "user_favourite",
@@ -249,6 +249,6 @@
   },
   "react": {
     "path": "frontend/",
-    "note": "Vite proxy /api → Node; prefer /api/v1 for new calls. Implemented in React: FAQ, rules, legal, disclaimer, privacy (stub matches Twig), assembly directory (POST /api/v1/assembly/search), parliament scores (GET /api/v1/parliament/members), home, category hub + /category/:type/:id/:slug placeholder, /category/.../ajax mirror. Login/register/profile/user/admin/initiative/otp/resetting remain Symfony mirrors until APIs + auth."
+    "note": "Vite proxy /api → Node; prefer /api/v1 for new calls. Implemented in React: FAQ, rules, legal, disclaimer, privacy (stub matches Twig), assembly directory (POST /api/v1/assembly/search), parliament scores (GET /api/v1/parliament/members), home, category hub, category initiative listing (POST /api/v1/category/:type/:id/:slug/search). Twig category DataTables also targets that Node URL. Login/register/profile/user/admin/initiative/otp/resetting remain Symfony mirrors until APIs + auth."
   }
 }
