@@ -250,5 +250,39 @@
   "react": {
     "path": "frontend/",
     "note": "Vite proxy /api → Node; prefer /api/v1 for new calls. Implemented in React: FAQ, rules, legal, disclaimer, privacy (stub matches Twig), assembly directory (POST /api/v1/assembly/search), parliament scores (GET /api/v1/parliament/members), home, category hub, category initiative listing (POST /api/v1/category/:type/:id/:slug/search). Twig category DataTables also targets that Node URL. Login/register/profile/user/admin/initiative/otp/resetting remain Symfony mirrors until APIs + auth."
+  },
+  "twig_to_react": {
+    "goal": "Fully retire Twig for browser HTML: every user-facing route served as React (SPA or SSR), Symfony reserved for APIs, auth, or temporary proxy until parity.",
+    "templates_glob_count": 116,
+    "already_ported_or_superseded": [
+      "Static copy: templates/default/faq, legal, rules, disclaimer, privacy (React ContentPage)",
+      "Data: assembly search, parliament members, category initiative search (Node /api/v1 + React tables; apps.js category DT uses Node)",
+      "React shell routes with Symfony fallbacks for auth/admin/user/initiative/otp/resetting"
+    ],
+    "remaining_template_groups": [
+      "templates/base.html.twig + footer + global chrome (nav, search, assets) → one React AppLayout matching design",
+      "templates/default/index.html.twig + Widget/* (hero, sidebars, trending, categories overview, etc.) → homepage APIs + React widgets",
+      "templates/Category/*.html.twig (overview pages, not only per-category table) → list APIs + React",
+      "templates/Vote/* (show, vote, result, forms) → initiative APIs + React; highest risk (encryption, POST flows)",
+      "templates/User/*, Profile/*, registration/*, security/*, Resetting/*, ChangePassword, Delegation → auth strategy then forms in React",
+      "templates/Admin/* → admin JSON + React admin app (ROLE checks)",
+      "templates/Menu/*, Helpers/*, FOSUserBundle/views/* → absorbed into React layout or removed when bundles unused"
+    ],
+    "plaintext_email_twigs": [
+      "*.txt.twig (registration, resetting, vote notify) — usually keep server-side or move to ESP templates; not the same as browser Twig migration"
+    ],
+    "blocking_dependencies": [
+      "Decide SPA (Vite only) vs SSR (Next/Remix) for SEO on /initiative/{id}/{slug} and category pages",
+      "Session or token strategy for all ROLE_USER / ROLE_ADMIN mutations before turning off Twig forms",
+      "Reverse proxy: serve frontend/dist index.html for migrated paths while Symfony handles /api and unmigrated routes during cutover"
+    ],
+    "suggested_order": [
+      "1) Homepage widget APIs + React homepage (replaces default/index + most Widget partials)",
+      "2) Initiative read path + vote/comment APIs + React initiative page (replaces Vote/show + vote.js)",
+      "3) Auth bundle (login/register/reset/OTP) in React + BFF",
+      "4) User profile, delegation, avatar",
+      "5) Admin module",
+      "6) Remove Twig extends for migrated routes; final proxy removal"
+    ]
   }
 }
