@@ -76,7 +76,7 @@ var App = (function () {
             var self = this;
 
             $.ajax({
-                url: Routing.generate('user_favourite', {'id': id}),
+                url: wpeSymfonyProxyUrl(Routing.generate('user_favourite', {'id': id})),
                 method: 'GET'
             }).then(function (data) {
                 console.log(data.message);
@@ -104,7 +104,7 @@ var App = (function () {
             var self = this;
 
             $.ajax({
-                url: Routing.generate('user_friend', {'id': id}),
+                url: wpeSymfonyProxyUrl(Routing.generate('user_friend', {'id': id})),
                 method: 'GET'
             }).then(function (data) {
                 console.log(data.message);
@@ -139,7 +139,7 @@ var App = (function () {
             var height = $p_wrapper.width() / 2;
 
             $.ajax({
-                url: Routing.generate('parliament_members'),
+                url: wpeApiV1Url('/parliament/members'),
                 method: 'POST'
             }).then(function (data) {
 
@@ -189,11 +189,11 @@ var App = (function () {
                 "searching": true,
                 "ordering": true,
                 "ajax": {
-                    "url": Routing.generate('category_type_search', {
+                    "url": wpeSymfonyProxyUrl(Routing.generate('category_type_search', {
                         "id": $table_wrapper.data("category-id"),
                         "slug": $table_wrapper.data("category-slug"),
                         "type": $table_wrapper.data("type")
-                    }),
+                    })),
                     "dataSrc": "items",
                     "type": "POST"
                 },
@@ -256,7 +256,7 @@ var App = (function () {
                 "searching": true,
                 "ordering": true,
                 "ajax": {
-                    "url": Routing.generate('assembly_search'),
+                    "url": wpeApiV1Url('/assembly/search'),
                     "dataSrc": "items",
                     "type": "POST"
                 },

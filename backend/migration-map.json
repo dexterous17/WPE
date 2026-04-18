@@ -1,0 +1,254 @@
+{
+  "meta": {
+    "description": "PHP/Symfony → Node (Express) /api/v1 migration tracker. Regenerate route inventory with: docker compose exec web php bin/console debug:router --format=json",
+    "symfony_proxy": "/api/symfony/* forwards remaining browser AJAX until migrated",
+    "v1_prefix": "/api/v1"
+  },
+  "phases": [
+    {
+      "id": 1,
+      "name": "public_read_json",
+      "note": "No session; DB read-only or static files"
+    },
+    {
+      "id": 2,
+      "name": "datatables_read_json",
+      "note": "POST form bodies; match JMS/DataTables JSON shape"
+    },
+    {
+      "id": 3,
+      "name": "session_mutations",
+      "note": "Needs auth (ROLE_USER). Options: JWT, session table, or keep Symfony until BFF session bridge exists"
+    },
+    {
+      "id": 4,
+      "name": "html_ssr",
+      "note": "Twig pages → React/SSR; out of scope for Express-only pass"
+    }
+  ],
+  "routes": [
+    {
+      "name": "parliament_members",
+      "symfony_path": "/parliament/members",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\DefaultController::parliamentMembersAction",
+      "consumers": ["public/assets/js/apps.js"],
+      "phase": 1,
+      "status": "done",
+      "node_path": "/api/v1/parliament/members"
+    },
+    {
+      "name": "user_ai_get_personas",
+      "symfony_path": "/user/ai/personas",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\AiAssistantController::getPersonasAction",
+      "consumers": [],
+      "phase": 1,
+      "status": "done",
+      "node_path": "/api/v1/ai/personas"
+    },
+    {
+      "name": "assembly_search",
+      "symfony_path": "/assembly/search",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\DefaultController::assemblySearchAction",
+      "consumers": ["public/assets/js/apps.js"],
+      "phase": 2,
+      "status": "done",
+      "node_path": "/api/v1/assembly/search"
+    },
+    {
+      "name": "category_type_search",
+      "symfony_path": "/{type}/{id}/{slug}/ajax",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\CategoryController::listCategorySearchAction",
+      "consumers": ["public/assets/js/apps.js"],
+      "phase": 2,
+      "status": "todo",
+      "node_path": null,
+      "notes": "Uses InitiativeRepository::searchCategoryType + countAllTypeInitiatives; port SQL/DQL next"
+    },
+    {
+      "name": "user_favourite",
+      "symfony_path": "/user/favourite/{id}",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\UserController::favouriteInitiativeAction",
+      "consumers": ["public/assets/js/apps.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null,
+      "notes": "Doctrine Favourite + ROLE_USER; needs session or token strategy"
+    },
+    {
+      "name": "user_friend",
+      "symfony_path": "/user/friend/{id}",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\UserController::favouriteFriendAction",
+      "consumers": ["public/assets/js/apps.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null
+    },
+    {
+      "name": "user_ai_draft",
+      "symfony_path": "/user/ai/draft",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\AiAssistantController::draftAction",
+      "consumers": ["templates/User/new.html.twig"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null,
+      "notes": "GEMINI / HTTP client + secrets; move after personas pattern proven"
+    },
+    {
+      "name": "initiative_show_vote",
+      "symfony_path": "/initiative/{id}/{slug}/vote",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["public/assets/js/vote.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null
+    },
+    {
+      "name": "initiative_vote_future",
+      "symfony_path": "/initiative/{id}/vote/future",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["public/assets/js/vote.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null
+    },
+    {
+      "name": "initiative_vote_current",
+      "symfony_path": "/initiative/{id}/vote/current",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["public/assets/js/vote.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null
+    },
+    {
+      "name": "initiative_show",
+      "symfony_path": "/initiative/{id}/{slug}",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["FOS JS links in apps.js", "templates"],
+      "phase": 4,
+      "status": "symfony_only",
+      "node_path": null
+    },
+    {
+      "name": "initiative_result_data_future",
+      "symfony_path": "/initiative/{id}/{slug}/result/future",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["templates/Vote/result.html.twig"],
+      "phase": 2,
+      "status": "todo",
+      "node_path": null
+    },
+    {
+      "name": "initiative_result_data_current",
+      "symfony_path": "/initiative/{id}/{slug}/result/current",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\VoteController",
+      "consumers": ["templates/Vote/result.html.twig"],
+      "phase": 2,
+      "status": "todo",
+      "node_path": null
+    },
+    {
+      "name": "user_avatar_save",
+      "symfony_path": "/user/avatar/save",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\UserController",
+      "consumers": ["templates/User/avatar.html.twig", "public/assets/plugins/svgavatars/js/svgavatars.core.js"],
+      "phase": 3,
+      "status": "proxy",
+      "node_path": null
+    },
+    {
+      "name": "user_profile_show",
+      "symfony_path": "/user/{id}/profile",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\UserController",
+      "consumers": ["apps.js", "templates"],
+      "phase": 4,
+      "status": "symfony_only",
+      "node_path": null
+    },
+    {
+      "name": "user_profile_avatar",
+      "symfony_path": "/user/{id}/avatar",
+      "methods": ["GET"],
+      "controller": "App\\Controller\\UserController",
+      "consumers": ["apps.js", "templates"],
+      "phase": 4,
+      "status": "symfony_only",
+      "node_path": null,
+      "notes": "Binary response; later CDN or static path"
+    },
+    {
+      "name": "quicksearch",
+      "symfony_path": "/quicksearch",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\SearchController",
+      "consumers": ["templates/base.html.twig form"],
+      "phase": 2,
+      "status": "todo",
+      "node_path": null
+    },
+    {
+      "name": "admin_user_search",
+      "symfony_path": "/admin/user/search",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\Admin\\UserAdminController",
+      "consumers": ["templates/Admin/User/index.html.twig"],
+      "phase": 3,
+      "status": "todo",
+      "node_path": null,
+      "notes": "ROLE_ADMIN"
+    },
+    {
+      "name": "admin_comment_search",
+      "symfony_path": "/admin/comment/search",
+      "methods": ["POST"],
+      "controller": "App\\Controller\\Admin\\CommentAdminController",
+      "consumers": ["templates/Admin/Comment/index.html.twig"],
+      "phase": 3,
+      "status": "todo",
+      "node_path": null
+    },
+    {
+      "name": "admin_initiative_search",
+      "symfony_path": "/admin/initiative/search",
+      "methods": ["GET", "POST"],
+      "controller": "App\\Controller\\Admin\\InitiativeAdminController",
+      "consumers": [],
+      "phase": 3,
+      "status": "todo",
+      "node_path": null
+    }
+  ],
+  "jquery_ajax_symfony_proxy": {
+    "files": [
+      "public/assets/js/vote.js",
+      "public/assets/js/comment.js",
+      "public/assets/js/apps.js",
+      "templates/User/new.html.twig",
+      "templates/Delegation/edit.html.twig",
+      "templates/User/avatar.html.twig"
+    ],
+    "note": "Uses wpeSymfonyProxyUrl() until switched to wpeApiV1Url()"
+  },
+  "comment_forms": {
+    "note": "comment.js uses form action/href from Twig-rendered URLs (not FOS expose); migrate with explicit /api/v1/comment/* routes"
+  },
+  "react": {
+    "path": "frontend/",
+    "note": "Vite proxy /api → Node; prefer /api/v1 for new calls"
+  }
+}

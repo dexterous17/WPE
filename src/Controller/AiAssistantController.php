@@ -47,6 +47,8 @@ class AiAssistantController extends BaseController
 
     /**
      * @Route("/personas", name="user_ai_get_personas", methods={"GET"}, options={"expose"=true})
+     *
+     * Prefer GET /api/v1/ai/personas (same JSON: { personas: { ... } }).
      */
     public function getPersonasAction(): JsonResponse
     {

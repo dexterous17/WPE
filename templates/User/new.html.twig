@@ -86,7 +86,7 @@
                 $btn.html('<i class="fas fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
 
                 $.ajax({
-                    url: '{{ path("user_ai_draft") }}',
+                    url: wpeSymfonyProxyUrl('{{ path("user_ai_draft")|e('js') }}'),
                     method: 'POST',
                     data: JSON.stringify({
                         prompt: prompt,

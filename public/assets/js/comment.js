@@ -40,7 +40,7 @@
             console.log('counter button clicked ...', e);
             var button = e.target;
             $.ajax({
-                url: $(button).attr("href"),
+                url: wpeSymfonyProxyUrl($(button).attr("href")),
                 method: 'POST'
             }).then(function (data) {
                 $(button)
@@ -105,7 +105,7 @@
             var singleCommentArea = $(form).parents(".single_comment_area").first();
             console.log("singleCommentArea1", singleCommentArea);
             $.ajax({
-                url: $(form).attr("action"),
+                url: wpeSymfonyProxyUrl($(form).attr("action")),
                 data: $(form).serialize(),
                 method: 'POST'
             }).then(function (data) {
@@ -146,7 +146,7 @@
             console.log('start submitting comment...');
             var form = e.target;
             $.ajax({
-                url: $(form).attr("action"),
+                url: wpeSymfonyProxyUrl($(form).attr("action")),
                 data: $(form).serialize(),
                 method: 'POST'
             }).then(function (data) {

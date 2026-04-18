@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -6,6 +6,14 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [apiOk, setApiOk] = useState(null)
+
+  useEffect(() => {
+    fetch('/api/v1/health')
+      .then((r) => r.json())
+      .then((j) => setApiOk(Boolean(j.ok)))
+      .catch(() => setApiOk(false))
+  }, [])
 
   return (
     <>
@@ -19,6 +27,10 @@ function App() {
           <h1>Get started</h1>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+          </p>
+          <p className="api-status">
+            Node API <code>/api/v1/health</code>:{' '}
+            {apiOk === null ? '…' : apiOk ? 'OK' : 'unreachable (start backend + Vite proxy)'}
           </p>
         </div>
         <button

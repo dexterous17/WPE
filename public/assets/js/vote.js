@@ -39,7 +39,7 @@
             var self = this;
             var id = self.$wrapper.data("id");
             var slug = self.$wrapper.data("slug");
-            var url = Routing.generate('initiative_show_vote', {'id': id, 'slug': slug});
+            var url = wpeSymfonyProxyUrl(Routing.generate('initiative_show_vote', {'id': id, 'slug': slug}));
 
             self.$wrapper.html(self._storage.spinner);
 
@@ -91,7 +91,7 @@
                 formData[self._storage.submitButton] = '';
             }
 
-            var url = Routing.generate('initiative_vote_future', {'id': id});
+            var url = wpeSymfonyProxyUrl(Routing.generate('initiative_vote_future', {'id': id}));
 
             console.log(url);
             console.log(formData);
@@ -128,7 +128,7 @@
                 formData[self._storage.submitButton] = '';
             }
 
-            var url = Routing.generate('initiative_vote_current', {'id': id});
+            var url = wpeSymfonyProxyUrl(Routing.generate('initiative_vote_current', {'id': id}));
 
             console.log(url);
             console.log(formData);
@@ -198,7 +198,7 @@
                             var $formPlaceholder = self.$content.find('#formPlaceholder');
                 
                             $.ajax({
-                                url: '/otp/render-verfication',
+                                url: wpeSymfonyProxyUrl('/otp/render-verfication'),
                                 method: 'GET',
                                 dataType: 'html',
                                 success: function(response) {

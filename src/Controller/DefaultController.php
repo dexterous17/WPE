@@ -171,6 +171,9 @@ class DefaultController extends BaseController
 
     /**
      * @Route("/parliament/members", name="parliament_members", methods={"POST", "GET"}, options={"expose"=true})
+     *
+     * Prefer the Node JSON API: GET or POST /api/v1/parliament/members (same response shape). This action remains for legacy clients and direct Symfony URLs.
+     *
      * @param Request $request
      * @return Response
      * @throws Exception
@@ -221,6 +224,8 @@ class DefaultController extends BaseController
 
     /**
      * Lists all users.
+     *
+     * Prefer the Node JSON API: POST /api/v1/assembly/search (DataTables contract). This action remains for legacy clients.
      *
      * @Route("/assembly/search", name="assembly_search", methods={"POST"},defaults={"id"=1},options={"expose"=true})
      * @param Request $request

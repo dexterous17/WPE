@@ -18,6 +18,24 @@ services:
     depends_on:
       - database
 
+  api:
+    image: node:22-alpine
+    working_dir: /srv
+    volumes:
+      - ./backend:/srv
+      - ./config:/srv/wpe-config:ro
+    command: sh -c "npm install && node src/index.js"
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: "3001"
+      SYMFONY_PROXY_TARGET: "http://web:80"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=utf8"
+      AI_PERSONAS_JSON_PATH: /srv/wpe-config/ai_personas.json
+    depends_on:
+      - web
+      - database
+
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine

@@ -9,6 +9,9 @@
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        # Empty = same-origin /api (Docker Apache → Node). Set in .env for symfony serve + Node on 3001.
+        wpe_node_api_base: '%env(default::WPE_NODE_API_BASE)%'
     form_themes:
         - 'bootstrap_4_layout.html.twig'
         - 'Widget/form.html.twig'

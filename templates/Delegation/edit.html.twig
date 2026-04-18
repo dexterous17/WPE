@@ -96,7 +96,7 @@
                 $(icon).addClass("fa-spinner");
                 $(icon).addClass("fa-spin");
                 $.ajax({
-                    url: $(form).attr("action"),
+                    url: wpeSymfonyProxyUrl($(form).attr("action")),
                     data: $(form).serialize(),
                     method: "POST",
                 }).then(function (data) {
@@ -121,7 +121,7 @@
                 $(icon).addClass("fa-spinner");
                 $(icon).addClass("fa-spin");
                 $.ajax({
-                    url: $(button).attr("href")
+                    url: wpeSymfonyProxyUrl($(button).attr("href"))
                 }).then(function (data) {
                     console.log("unset finished");
                     icon = $(button).find("svg");

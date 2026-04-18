@@ -2,7 +2,7 @@
 FROM php:8.1-apache
 ARG TIMEZONE=Europe/Paris
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite proxy proxy_http
 
 RUN apt-get update && apt-get install -y \
     openssl \

@@ -169,7 +169,7 @@
             // --- Common Save Logic ---
             function saveToServer(base64data, $btn, $status) {
                 $.ajax({
-                    url: '/user/avatar/save',
+                    url: wpeSymfonyProxyUrl('/user/avatar/save'),
                     method: 'POST',
                     data: {
                         filename: 'avatar.png',

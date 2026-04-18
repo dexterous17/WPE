@@ -183,6 +183,9 @@
     <script src="/assets/crossbrowserjs/excanvas.min.js" type="text/javascript"></script>
     <![endif]-->
     <script src="/assets/js/active.js"></script>
+    <script>window.WPE_NODE_API_BASE = window.WPE_NODE_API_BASE || {{ wpe_node_api_base|json_encode|raw }};</script>
+    <script src="{{ asset('assets/js/wpe-symfony-proxy.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/wpe-api-v1.js') }}" type="text/javascript"></script>
     <script src="/bundles/fosjsrouting/js/router.js"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
     <script src="/assets/js/apps.js" type="text/javascript"></script>
